@@ -32,7 +32,9 @@ print(p1.read("p0"))
 # use HIGH or LOW to set the pin, HIGH is +3.3v LOW is 0v
 p1.pin_mode("p7", "OUTPUT")
 p1.write("p7", "LOW")
+p1.write(7, 1)
 print(p1.read("p7"))
+print(p1.read(7))
 
 # Additional you can do the following
 p1.set_i2cBus(1)

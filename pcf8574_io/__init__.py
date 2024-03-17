@@ -16,6 +16,9 @@ class PCF:
     def read(self, PinName):
         return PCF85.digitalRead(PinName, self.smBusNum, self.address)
 
+    def read_all(self):
+        return PCF85.readByte(self.smBusNum, self.address)
+
     def write(self, PinName, Val):
         PCF85.digitalWrite(PinName, Val, self.address, self.pinModeFlag, self.smBusNum)
 

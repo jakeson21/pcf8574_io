@@ -14,7 +14,6 @@ def setup(PCFAdd, smBus, status):
 def pin_mode(pinName, mode, flg):
     pn = pinNameToNum(pinName)
     return set_mode(pinName, mode, int(math.pow(2, pn)), flg)
-    
 
 
 def set_mode(pinName, mode, rValue, flg):
@@ -30,23 +29,36 @@ def set_mode(pinName, mode, rValue, flg):
 
 
 def digitalRead(pinName, smbs, addr):
-    with SMBus(smbs) as bus:
-        b = bus.read_byte(addr)
-    if isKthBitSet(b, pinNameToNum(pinName) + 1):
+    b = readByte(smbs, addr)
+    pn = pinNameToNum(pinName)
+    if isKthBitSet(b, pn + 1):
         return True
     else:
         return False
+    
+
+def readByte(smbs, addr):
+    with SMBus(smbs) as bus:
+        b = bus.read_byte(addr)
+    return b
 
 
 def pinNameToNum(pinName):
     try:
-        pn = int(pinName.strip().replace("p", "").strip())
+        if isinstance(pinName, str):
+            pn = int(pinName.strip().replace("p", "").strip())
+        elif isinstance(pinName, int):
+            pn = pinName
+        else:
+            raise ValueError("Unhandled pinName")
+        
         if pn in range(8):
             return pn
         else:
-            print("Wrone pin name!")
-    except:
-        raise Exception("Wrone pin name!")
+            raise ValueError("Wrone pin name!")
+    except Exception as e:
+        print(e)
+        raise
 
 
 def isKthBitSet(n, k):
@@ -57,21 +69,27 @@ def isKthBitSet(n, k):
 
 
 def digitalWrite(pinName, val, addr, flg, smbs):
-    if isKthBitSet(flg, pinNameToNum(pinName) + 1):
-        if "HIGH" in val.strip():
-            write_data(pinNameToNum(pinName), 1, smbs, flg, addr)
-        elif "LOW" in val.strip():
-            write_data(pinNameToNum(pinName), 0, smbs, flg, addr)
+    pn = pinNameToNum(pinName)
+    if isKthBitSet(flg, pn + 1):
+        if isinstance(val, str):
+            if "HIGH" in val.strip():
+                val = 1
+            elif "LOW" in val.strip():
+                val = 0
+            else:
+                print("Wrong pin mode for pin", pinName)
+        elif isinstance(val, int):
+            pass
         else:
-            print("Wrong pin mode for pin",pinName)
+            print("Wrong pin mode for pin", pinName)
+        write_data(pn, val, smbs, flg, addr)
     else:
         print("You can't write input pin")
 
 
 def write_data(pnNum, val, smbs, flg, addr):
     if isKthBitSet(flg, pnNum + 1):
-        with SMBus(smbs) as bus:
-            wr = bus.read_byte(addr)
+        wr = readByte(smbs, addr)
         if val == 0 and isKthBitSet(wr, pnNum + 1):
             wr = wr - int(math.pow(2, pnNum))
             with SMBus(smbs) as bus:
