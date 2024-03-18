@@ -17,13 +17,16 @@ print(p1.read("p0"))
 # use HIGH or LOW to set the pin, HIGH is +3.3v LOW is 0v
 p1.pin_mode("p7", "OUTPUT")
 p1.write("p7", "LOW")
+p1.write(7, 1)
 print(p1.read("p7"))
+print(p1.read(7))
 
 # Additional you can do the following
-p1.set_i2cBus(1)
-p1.get_i2cBus()
+p1.set_i2cBus(1) # Set i2c bus number to use (default=1)
+p1.get_i2cBus() # Return the current i2c bus
 print(p1.get_pin_mode("p7")) # returns string OUTPUT, INPUT
 print(p1.is_pin_output("p7")) # returns boolean True, False
 print(p1.get_all_mode()) # returns list of all pins ["OUTPUT","INPUT",...etc]
+print(p1.read_all()) # returns all pin states as a byte
 
 
