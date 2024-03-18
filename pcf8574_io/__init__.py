@@ -22,6 +22,13 @@ class PCF:
     def write(self, PinName, Val):
         PCF85.digitalWrite(PinName, Val, self.address, self.pinModeFlag, self.smBusNum)
 
+    def write_all(self, Val):
+        PCF85.write_all_data(Val, self.smBusNum, self.pinModeFlag, self.address)
+
+    def pin_mode_all(self, Mode):
+        for pn in range(8):
+            self.pinModeFlag = PCF85.pin_mode(pn, Mode, self.pinModeFlag)
+
     def set_i2cBus(self, port):
         self.smBusNum = port
     

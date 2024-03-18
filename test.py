@@ -29,4 +29,6 @@ print(p1.is_pin_output("p7")) # returns boolean True, False
 print(p1.get_all_mode()) # returns list of all pins ["OUTPUT","INPUT",...etc]
 print(p1.read_all()) # returns all pin states as a byte
 
-
+p1.pin_mode_all("OUTPUT")
+for v in range(257):
+    p1.write_all(v)

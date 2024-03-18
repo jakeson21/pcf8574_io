@@ -99,6 +99,15 @@ def write_data(pnNum, val, smbs, flg, addr):
             with SMBus(smbs) as bus:
                 bus.write_byte(addr, wr)
 
+
+def write_all_data(val, smbs, flg, addr):
+    if flg == 255:
+        with SMBus(smbs) as bus:
+            bus.write_byte(addr, val)
+    else:
+        raise SystemError("All pins must be OUTPUT")
+
+
 def get_pin_mode(pinName,flg):
     pn = pinNameToNum(pinName)
     if isKthBitSet(flg,pn+1):
